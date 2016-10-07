@@ -15,6 +15,7 @@ namespace CarcassonneCraft
 
         void Start()
         {
+            Env.Init();
             World.Init();
 
             PlayerInitDatas players = CreateDummyPlayerInitDatas();

@@ -60,6 +60,41 @@ namespace CarcassonneCraft
       get { return _diffs; }
     }
   
+    private int _areaid;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"areaid", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int areaid
+    {
+      get { return _areaid; }
+      set { _areaid = value; }
+    }
+    private int _xareasnum;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"xareasnum", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int xareasnum
+    {
+      get { return _xareasnum; }
+      set { _xareasnum = value; }
+    }
+    private int _zareasnum;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"zareasnum", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int zareasnum
+    {
+      get { return _zareasnum; }
+      set { _zareasnum = value; }
+    }
+    private int _xchunknum;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"xchunknum", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int xchunknum
+    {
+      get { return _xchunknum; }
+      set { _xchunknum = value; }
+    }
+    private int _zchunknum;
+    [global::ProtoBuf.ProtoMember(6, IsRequired = true, Name=@"zchunknum", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int zchunknum
+    {
+      get { return _zchunknum; }
+      set { _zchunknum = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
