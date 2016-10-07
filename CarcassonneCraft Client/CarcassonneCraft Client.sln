@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarcassonneCraft Client.CSharp.Plugins", "CarcassonneCraft Client.CSharp.Plugins.csproj", "{32E25FBC-B1B4-7E9E-4103-6C46CFCFD1ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarcassonneCraft Client.CSharp", "CarcassonneCraft Client.CSharp.csproj", "{6CA42423-4D43-B1FC-2853-D80932BA904A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarcassonneCraft Client.CSharp.Editor", "CarcassonneCraft Client.CSharp.Editor.csproj", "{9DF16AA9-BFA0-3676-9EC0-E65F2A9D101D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32E25FBC-B1B4-7E9E-4103-6C46CFCFD1ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32E25FBC-B1B4-7E9E-4103-6C46CFCFD1ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32E25FBC-B1B4-7E9E-4103-6C46CFCFD1ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32E25FBC-B1B4-7E9E-4103-6C46CFCFD1ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA42423-4D43-B1FC-2853-D80932BA904A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA42423-4D43-B1FC-2853-D80932BA904A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA42423-4D43-B1FC-2853-D80932BA904A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA42423-4D43-B1FC-2853-D80932BA904A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DF16AA9-BFA0-3676-9EC0-E65F2A9D101D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DF16AA9-BFA0-3676-9EC0-E65F2A9D101D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DF16AA9-BFA0-3676-9EC0-E65F2A9D101D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DF16AA9-BFA0-3676-9EC0-E65F2A9D101D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

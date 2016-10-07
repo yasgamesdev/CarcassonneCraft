@@ -1,0 +1,2 @@
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft\CarcassonneCraft\bin\Debug\CarcassonneCraft.exe.config
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Server\CarcassonneCraft\bin\Debug\CarcassonneCraft.exe.config
