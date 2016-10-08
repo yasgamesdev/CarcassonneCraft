@@ -9,6 +9,16 @@ namespace CarcassonneCraft
 {
     public static class Env
     {
+        /*public const int XBlockN = 2;
+        public const int YBlockN = 32;
+        public const int ZBlockN = 3;
+
+        public const int XChunkN = 5;
+        public const int ZChunkN = 4;
+
+        public const int XAreasN = 6;
+        public const int ZAreasN = 7;*/
+
         public const int XBlockN = 8;
         public const int YBlockN = 32;
         public const int ZBlockN = 8;
@@ -164,7 +174,7 @@ namespace CarcassonneCraft
             int x = worldPos.xnum % (XBlockN * XChunkN);
             int z = worldPos.znum % (ZBlockN * ZChunkN);
 
-            return new XZNum((int)(x / 8), (int)(z / 8));
+            return new XZNum((int)(x / XBlockN), (int)(z / ZBlockN));
         }
 
         public static int GetDefaultAreaID(XZNum loadChunkPos)

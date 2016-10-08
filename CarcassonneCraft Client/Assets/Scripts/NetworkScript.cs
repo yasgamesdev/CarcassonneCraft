@@ -135,13 +135,14 @@ namespace CarcassonneCraft
                     XZNum areasNum = Env.GetAreasNum(loadChunkPos);
                     int areaid = Players.GetSelectArea(areasNum);
 
-                    if(!World.IsAreaLoaded(areaid, areasNum))
+                    if (!World.IsAreaLoaded(areaid, areasNum))
                     {
                         DummyInquiryArea(areaid);
                     }
                     else
                     {
                         LoadChunk(areaid, loadChunkPos);
+                        //Debug.Log(loadChunkPos.xnum + "," + loadChunkPos.znum);
                         //Debug.Log("Load Chunk");
                     }
                     //Debug.Log(areasNum.xnum + "," + areasNum.znum);
@@ -172,7 +173,7 @@ namespace CarcassonneCraft
             info.rating = 0;
             info.rated = false;
             info.xareasnum = (areaid - 1) % Env.XAreasN;
-            info.zareasnum = (areaid - 1) / Env.ZAreasN;
+            info.zareasnum = (areaid - 1) / Env.XAreasN;
 
             World.AddAreaInfo(info);
         }

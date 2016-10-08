@@ -28,8 +28,8 @@ namespace CarcassonneCraft
             {
                 for (int z = 0; z < Env.ZBlockN; z++)
                 {
-                    XZNum worldPos = new XZNum(x + (loadChunkNum.xnum * Env.XChunkN) + (areasNum.xnum * Env.XBlockN * Env.XChunkN),
-                                               z + (loadChunkNum.znum * Env.ZChunkN) + (areasNum.znum * Env.ZBlockN * Env.ZChunkN));
+                    XZNum worldPos = new XZNum(x + (loadChunkNum.xnum * Env.XBlockN) + (areasNum.xnum * Env.XBlockN * Env.XChunkN),
+                                               z + (loadChunkNum.znum * Env.ZBlockN) + (areasNum.znum * Env.ZBlockN * Env.ZChunkN));
                     for (int y = 0; y < Env.YBlockN; y++)
                     {
                         blocks[x, y, z] = Env.GetBlockType(worldPos.xnum, y, worldPos.znum);
