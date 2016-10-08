@@ -116,8 +116,10 @@
     <Compile Include="Assets\Scripts\Area.cs" />
     <Compile Include="Assets\Scripts\AreaInfo.pb.cs" />
     <Compile Include="Assets\Scripts\Areas.cs" />
+    <Compile Include="Assets\Scripts\BlockTypes.cs" />
     <Compile Include="Assets\Scripts\Chunk.cs" />
     <Compile Include="Assets\Scripts\Chunk.pb.cs" />
+    <Compile Include="Assets\Scripts\Combine.cs" />
     <Compile Include="Assets\Scripts\DataType.cs" />
     <Compile Include="Assets\Scripts\Env.cs" />
     <Compile Include="Assets\Scripts\Follow.cs" />

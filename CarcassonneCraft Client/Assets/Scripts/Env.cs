@@ -23,7 +23,7 @@ namespace CarcassonneCraft
         public const int AutoUnloadDistance = 24;
         public const float LoadMilliseconds = 2000;
 
-        static Noise2D heightMap;
+        static float[,] heights;
 
         public static void Init()
         {
@@ -40,7 +40,7 @@ namespace CarcassonneCraft
 
             ModuleBase myModule = myPerlin;
 
-            heightMap = new Noise2D(mapSizeX, mapSizeY, myModule);
+            Noise2D heightMap = new Noise2D(mapSizeX, mapSizeY, myModule);
 
             heightMap.GeneratePlanar(
                 sampleOffsetX,
@@ -48,11 +48,12 @@ namespace CarcassonneCraft
                 sampleOffsetY,
                 sampleOffsetY + sampleSizeY
                 );
+            heights = heightMap.GetData();
         }
 
         public static int GetHeight(int worldx, int worldz)
         {
-            float height = heightMap.GetData()[worldx, worldz];
+            float height = heights[worldx, worldz];
             if (height > 1.0f)
             {
                 height = 1.0f;
@@ -64,7 +65,60 @@ namespace CarcassonneCraft
             height += 1.0f;
             height /= 2.0f;
 
-            return (int)(height * (YBlockN - 1));
+            //return (int)(height * (YBlockN - 1));
+            return (int)(height * (YBlockN));
+        }
+
+        public static int GetBlockType(int worldx, int worldy, int worldz)
+        {
+            int height = GetHeight(worldx, worldz);
+            int y = worldy;
+            if (y < height)
+            {
+                if (y >= 31)
+                {
+                    return 9;
+                }
+                else if (y >= 28)
+                {
+                    return 8;
+                }
+                else if (y >= 22)
+                {
+                    return 7;
+                }
+                else if (y >= 16)
+                {
+                    return 6;
+                }
+                else if (y >= 15)
+                {
+                    return 5;
+                }
+                else
+                {
+                    return 4;
+                }
+            }
+            else if(y < 16)
+            {
+                if(y == 15)
+                {
+                    return 3;
+                }
+                else if(y >= 8)
+                {
+                    return 2;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         public static void CreateDefaultSelects(List<int> selects)
