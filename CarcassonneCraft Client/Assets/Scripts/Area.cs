@@ -46,7 +46,28 @@ namespace CarcassonneCraft
         {
             XZNum loadChunkNum = Env.GetChunkNum(loadChunkPos);
             chunks[loadChunkNum.xnum, loadChunkNum.znum] = new Chunk();
+            //chunks[loadChunkNum.xnum, loadChunkNum.znum].CreatePrefab(loadChunkPos);
+        }
+
+        public bool IsPrefabLoaded(XZNum loadChunkPos)
+        {
+            XZNum loadChunkNum = Env.GetChunkNum(loadChunkPos);
+            return chunks[loadChunkNum.xnum, loadChunkNum.znum].IsPrefabLoaded();
+        }
+
+        public void LoadPrefab(XZNum loadChunkPos)
+        {
+            XZNum loadChunkNum = Env.GetChunkNum(loadChunkPos);
             chunks[loadChunkNum.xnum, loadChunkNum.znum].CreatePrefab(loadChunkPos);
+        }
+
+        public void UnLoadPrefab(XZNum unloadChunkPos)
+        {
+            XZNum loadChunkNum = Env.GetChunkNum(unloadChunkPos);
+            if (chunks[loadChunkNum.xnum, loadChunkNum.znum] != null)
+            {
+                chunks[loadChunkNum.xnum, loadChunkNum.znum].DestroyPrefab(unloadChunkPos);
+            }
         }
     }
 }

@@ -41,5 +41,23 @@ namespace CarcassonneCraft
             XZNum areasNum = Env.GetAreasNum(loadChunkPos);
             world[areasNum.xnum, areasNum.znum].LoadDefaultChunk(loadChunkPos);
         }
+
+        public static bool IsPrefabLoaded(int areaid, XZNum loadChunkPos)
+        {
+            XZNum areasNum = Env.GetAreasNum(loadChunkPos);
+            return world[areasNum.xnum, areasNum.znum].IsPrefabLoaded(areaid, loadChunkPos);
+        }
+
+        public static void LoadPrefab(int areaid, XZNum loadChunkPos)
+        {
+            XZNum areasNum = Env.GetAreasNum(loadChunkPos);
+            world[areasNum.xnum, areasNum.znum].LoadPrefab(areaid, loadChunkPos);
+        }
+
+        public static void UnLoadPrefab(int areaid, XZNum unloadChunkPos)
+        {
+            XZNum areasNum = Env.GetAreasNum(unloadChunkPos);
+            world[areasNum.xnum, areasNum.znum].UnLoadPrefab(areaid, unloadChunkPos);
+        }
     }
 }

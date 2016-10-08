@@ -22,6 +22,23 @@ namespace CarcassonneCraft
             Construction(blocks, areasNum, loadChunkNum);
         }
 
+        public void DestroyPrefab(XZNum unloadChunkPos)
+        {
+            if(IsPrefabLoaded())
+            {
+                foreach(GameObject prefab in prefabs.Values)
+                {
+                    GameObject.Destroy(prefab);
+                }
+                prefabs.Clear();
+            }
+        }
+
+        public bool IsPrefabLoaded()
+        {
+            return prefabs.Count != 0;
+        }
+
         void LoadDefaultBlocks(int[,,] blocks, XZNum areasNum, XZNum loadChunkNum)
         {
             for (int x = 0; x < Env.XBlockN; x++)

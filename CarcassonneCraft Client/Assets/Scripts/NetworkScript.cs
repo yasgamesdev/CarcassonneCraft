@@ -45,6 +45,8 @@ namespace CarcassonneCraft
 
                 //ObjectManager.PushData();
             }
+
+            //AutoUnloadPrefab();
         }
 
         void FixedUpdate()
@@ -180,9 +182,16 @@ namespace CarcassonneCraft
 
         void LoadChunk(int areaid, XZNum loadChunkPos)
         {
-            if(!World.IsChunkLoaded(areaid, loadChunkPos))
+            if(World.IsChunkLoaded(areaid, loadChunkPos))
             {
-                if(Env.IsDefaultArea(areaid, loadChunkPos))
+                if(!World.IsPrefabLoaded(areaid, loadChunkPos))
+                {
+                    World.LoadPrefab(areaid, loadChunkPos);
+                }
+            }
+            else
+            {
+                if (Env.IsDefaultArea(areaid, loadChunkPos))
                 {
                     World.LoadDefaultChunk(loadChunkPos);
                     //Debug.Log(loadChunkPos.xnum + "," + loadChunkPos.znum);
@@ -193,15 +202,33 @@ namespace CarcassonneCraft
                     DummyInquiryChunk(areaid, loadChunkNum);
                 }
             }
-            /*else
-            {
-                Debug.Log("Done");
-            }*/
         }
 
         void DummyInquiryChunk(int areaid, XZNum loadChunkNum)
         {
             Debug.Log("Assert");
+        }
+
+        void AutoUnloadPrefab()
+        {
+            XZNum playerPos = Players.GetPlayerPos();
+
+            for (int x = playerPos.xnum - Env.XBlockN * Env.AutoUnloadDistance; x <= playerPos.xnum + Env.XBlockN * Env.AutoUnloadDistance; x += Env.XBlockN)
+            {
+                for (int z = playerPos.znum - Env.ZBlockN * Env.AutoUnloadDistance; z <= playerPos.znum + Env.ZBlockN * Env.AutoUnloadDistance; z += Env.XBlockN)
+                {
+                    if (Env.IsInsideWorld(new XZNum(x, z)))
+                    {
+                        if (x == playerPos.xnum - Env.XBlockN * Env.AutoUnloadDistance || x == playerPos.xnum + Env.XBlockN * Env.AutoUnloadDistance ||
+                            z == playerPos.znum - Env.ZBlockN * Env.AutoUnloadDistance || z == playerPos.znum + Env.ZBlockN * Env.AutoUnloadDistance)
+                        {
+                            XZNum areasNum = Env.GetAreasNum(new XZNum(x, z));
+                            int areaid = Players.GetSelectArea(areasNum);
+                            World.UnLoadPrefab(areaid, new XZNum(x, z));
+                        }
+                    }
+                }
+            }
         }
     }
 }
