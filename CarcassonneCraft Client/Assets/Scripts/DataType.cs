@@ -10,5 +10,6 @@ namespace CarcassonneCraft
         Null,
         String,
         Bytes,
+        Int32,
     }
 }

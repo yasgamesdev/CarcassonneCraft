@@ -47,10 +47,13 @@ namespace CarcassonneCraft
 
         static void Server()
         {
+            Env.Init();
             Players.Init();
             World.Init();
 
             GSQLite.Open(sqlpath);
+
+            //AreaInfo info = GSQLite.GetAreaInfo(1, 1);
 
             GSrv.Init();
             GSrv.SetConnectPacketHandler(ConnectHandler);
@@ -60,6 +63,10 @@ namespace CarcassonneCraft
             GSrv.SetPacketHandler(MessageType.Register, DataType.Bytes, RegisterHandler);
             GSrv.SetPacketHandler(MessageType.Push, DataType.Bytes, PushHandler);
             GSrv.SetPacketHandler(MessageType.SendMessage, DataType.String, SendMessageHandler);*/
+            GSrv.SetPacketHandler(MessageType.RequestAreaInfo, DataType.Int32, RequestAreaInfoHandler);
+            GSrv.SetPacketHandler(MessageType.RequestChunkDiffs, DataType.Bytes, RequestChunkDiffsHandler);
+            GSrv.SetPacketHandler(MessageType.RequestAllAreaInfo, DataType.Bytes, RequestAllAreaInfoHandler);
+            GSrv.SetPacketHandler(MessageType.PressGoodButton, DataType.Bytes, PressGoodButtonHandler);
             GSrv.Listen("CarcassonneCraft0.1", port);
 
             while (!exit)
@@ -69,7 +76,7 @@ namespace CarcassonneCraft
                 GSrv.Receive();
 
                 sendCount++;
-                if (sendCount == 2)
+                if (sendCount == 3)
                 {
                     sendCount = 0;
 
@@ -135,7 +142,7 @@ namespace CarcassonneCraft
 
         static public void ConnectHandler(NetConnection connection, object data)
         {
-
+            PlayerInitData player = GSQLite.LoginUser("hiro", new byte[32]);
         }
 
         static public void DisconnectHandler(NetConnection connection, object data)
@@ -146,6 +153,69 @@ namespace CarcassonneCraft
         static public void DebugHandler(NetConnection connection, object data)
         {
             Console.WriteLine((string)data);
+        }
+
+        static public void RequestAreaInfoHandler(NetConnection connection, object data)
+        {
+            int areaid = (int)data;
+
+            if(!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            AreaInfo info = GSQLite.GetAreaInfo(areaid, userid);
+            if(info != null)
+            {
+
+            }
+        }
+
+        static public void RequestChunkDiffsHandler(NetConnection connection, object data)
+        {
+            RequestChunkInfo request = GSrv.Deserialize<RequestChunkInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            Chunk chunk = GSQLite.GetChunkDiffs(request);
+            if(chunk != null)
+            {
+
+            }
+        }
+
+        static public void RequestAllAreaInfoHandler(NetConnection connection, object data)
+        {
+            RequestAllAreaInfo request = GSrv.Deserialize<RequestAllAreaInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            AreaInfos infos = GSQLite.GetAllAreaInfo(request, userid);
+        }
+
+        static public void PressGoodButtonHandler(NetConnection connection, object data)
+        {
+            PressGoodInfo push = GSrv.Deserialize<PressGoodInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            AreaInfo info = GSQLite.GetAreaInfo(push.areaid, userid);
+            if (info != null)
+            {
+
+            }
         }
 
         /*static public void LoginHandler(NetConnection connection, object data)

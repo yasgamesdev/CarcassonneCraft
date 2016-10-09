@@ -101,10 +101,13 @@
     <Compile Include="Player.cs" />
     <Compile Include="PlayerInitData.pb.cs" />
     <Compile Include="Players.cs" />
-    <Compile Include="PlayersCashe.cs" />
+    <Compile Include="PressGoodInfo.pb.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestAllAreaInfo.pb.cs" />
+    <Compile Include="RequestChunkInfo.pb.cs" />
     <Compile Include="World.cs" />
+    <Compile Include="XZNum.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

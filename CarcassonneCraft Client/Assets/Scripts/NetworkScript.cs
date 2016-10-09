@@ -206,6 +206,7 @@ namespace CarcassonneCraft
                 }
                 else
                 {
+                    XZNum areasNum = Env.GetAreasNum(loadChunkPos);
                     XZNum loadChunkNum = Env.GetChunkNum(loadChunkPos);
                     DummyInquiryChunk(areaid, loadChunkNum);
                 }

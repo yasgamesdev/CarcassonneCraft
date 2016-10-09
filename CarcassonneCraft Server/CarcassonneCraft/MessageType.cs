@@ -21,5 +21,13 @@ namespace CarcassonneCraft
         Push,
         SendMessage,
         BroadcastMessage,
+        RequestAreaInfo,
+        ReplyAreaInfo,
+        RequestChunkDiffs,
+        ReplyChunkDiffs,
+        RequestAllAreaInfo,
+        ReplyAllAreaInfo,
+        PressGoodButton,
+        ReplyLatestRating,
     }
 }

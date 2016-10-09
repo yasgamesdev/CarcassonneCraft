@@ -139,6 +139,10 @@ namespace CarcassonneCraft
                 int numberOfBytes = message.ReadInt32();
                 handlers[(int)messageType].handleFunc(message.SenderConnection, message.ReadBytes(numberOfBytes));
             }
+            else if (dataType == DataType.Int32)
+            {
+                handlers[(int)messageType].handleFunc(message.SenderConnection, message.ReadInt32());
+            }
         }
 
         public static void Send(MessageType messageType, NetConnection connect, NetDeliveryMethod method)
@@ -185,6 +189,22 @@ namespace CarcassonneCraft
             NetOutgoingMessage message = server.CreateMessage();
             message.Write((byte)messageType);
             message.Write(data.Length);
+            message.Write(data);
+            server.SendToAll(message, method);
+        }
+
+        public static void Send(MessageType messageType, int data, NetConnection connect, NetDeliveryMethod method)
+        {
+            NetOutgoingMessage message = server.CreateMessage();
+            message.Write((byte)messageType);
+            message.Write(data);
+            server.SendMessage(message, connect, method);
+        }
+
+        public static void SendToAll(MessageType messageType, int data, NetDeliveryMethod method)
+        {
+            NetOutgoingMessage message = server.CreateMessage();
+            message.Write((byte)messageType);
             message.Write(data);
             server.SendToAll(message, method);
         }
