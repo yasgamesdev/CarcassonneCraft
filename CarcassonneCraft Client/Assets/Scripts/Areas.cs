@@ -61,5 +61,28 @@ namespace CarcassonneCraft
                 areas[areaid].UnLoadPrefab(unloadChunkPos);
             }
         }
+
+        public List<AreaInfo> GetAllAreaInfo(XZNum areasNum)
+        {
+            List<AreaInfo> ret = new List<AreaInfo>();
+
+            foreach(Area area in areas.Values)
+            {
+                AreaInfo node = new AreaInfo();
+                node.areaid = area.areaid;
+                node.areaname = area.areaname;
+                node.userid = area.userid;
+                node.username = area.username;
+                node.rating = area.rating;
+                node.rated = area.rated;
+                node.editusers.AddRange(area.editusers);
+                node.xareasnum = areasNum.xnum;
+                node.zareasnum = areasNum.znum;
+
+                ret.Add(node);
+            }
+
+            return ret;
+        }
     }
 }

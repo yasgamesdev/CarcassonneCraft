@@ -44,6 +44,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         public bool isMoving { get; private set; }
 
+        public void SetCursorLock(bool value)
+        {
+            m_MouseLook.SetCursorLock(value);
+        }
+
         // Use this for initialization
         private void Start()
         {

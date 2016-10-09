@@ -7,13 +7,13 @@ namespace CarcassonneCraft
 {
     public class Area
     {
-        int areaid;
-        string areaname;
-        int userid;
-        string username;
-        int rating;
-        bool rated;
-        List<UserInfo> editusers;
+        public int areaid { get; private set; }
+        public string areaname { get; private set; }
+        public int userid { get; private set; }
+        public string username { get; private set; }
+        public int rating { get; private set; }
+        public bool rated { get; private set; }
+        public List<UserInfo> editusers { get; private set; }
 
         Chunk[,] chunks = new Chunk[Env.XChunkN, Env.ZChunkN];
 

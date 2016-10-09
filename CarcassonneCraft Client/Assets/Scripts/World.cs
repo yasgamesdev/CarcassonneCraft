@@ -59,5 +59,10 @@ namespace CarcassonneCraft
             XZNum areasNum = Env.GetAreasNum(unloadChunkPos);
             world[areasNum.xnum, areasNum.znum].UnLoadPrefab(areaid, unloadChunkPos);
         }
+
+        public static List<AreaInfo> GetAllAreaInfo(XZNum areasNum)
+        {
+            return world[areasNum.xnum, areasNum.znum].GetAllAreaInfo(areasNum);
+        }
     }
 }

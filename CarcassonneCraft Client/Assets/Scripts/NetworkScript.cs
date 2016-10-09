@@ -74,7 +74,7 @@ namespace CarcassonneCraft
         public PlayerInitDatas CreateDummyPlayerInitDatas()
         {
             PlayerSyncData sync = new PlayerSyncData();
-            sync.userid = 2;
+            sync.userid = 1;
             sync.ypos = 1.0f;
             PlayerInitData init = new PlayerInitData();
             init.sync = sync;
@@ -174,6 +174,14 @@ namespace CarcassonneCraft
             info.username = "Master";
             info.rating = 0;
             info.rated = false;
+            UserInfo user0 = new UserInfo();
+            user0.userid = 1;
+            user0.username = "Master";
+            UserInfo user1 = new UserInfo();
+            user1.userid = 3;
+            user1.username = "Unitychan";
+            info.editusers.Add(user0);
+            info.editusers.Add(user1);
             info.xareasnum = (areaid - 1) % Env.XAreasN;
             info.zareasnum = (areaid - 1) / Env.XAreasN;
 

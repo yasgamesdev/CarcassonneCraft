@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using UnityEngine;
+using UnityStandardAssets.Characters.FirstPerson;
 
 namespace CarcassonneCraft
 {
@@ -50,6 +51,12 @@ namespace CarcassonneCraft
         public int GetSelectArea(XZNum areasNum)
         {
             return init.selects[areasNum.xnum + Env.XAreasN * areasNum.znum];
+        }
+
+        public void SetControllerActive(bool active)
+        {
+            prefab.GetInstance().GetComponent<FirstPersonController>().SetCursorLock(active);
+            prefab.GetInstance().GetComponent<FirstPersonController>().enabled = active;
         }
     }
 }

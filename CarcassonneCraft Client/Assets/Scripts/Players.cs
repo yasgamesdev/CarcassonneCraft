@@ -30,6 +30,16 @@ namespace CarcassonneCraft
             return player.GetSelectArea(areasNum);
         }
 
+        public static Player GetPlayer()
+        {
+            return player;
+        }
+
+        public static int GetPlayerUserID()
+        {
+            return player.GetUserID();
+        }
+
         /*static Player player;
         static Dictionary<int, ClientObject>[] objs;
 

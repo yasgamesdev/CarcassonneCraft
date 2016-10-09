@@ -126,9 +126,11 @@
     <Compile Include="Assets\Scripts\GCli.cs" />
     <Compile Include="Assets\Scripts\MessageType.cs" />
     <Compile Include="Assets\Scripts\NetworkScript.cs" />
+    <Compile Include="Assets\Scripts\NodeScript.cs" />
     <Compile Include="Assets\Scripts\OtherPlayer.cs" />
     <Compile Include="Assets\Scripts\OtherPlayerPrefabScript.cs" />
     <Compile Include="Assets\Scripts\PacketHandler.cs" />
+    <Compile Include="Assets\Scripts\PanelScript.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
     <Compile Include="Assets\Scripts\PlayerBase.cs" />
     <Compile Include="Assets\Scripts\PlayerInitData.pb.cs" />
