@@ -1,0 +1,21 @@
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.pdb
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\Lidgren.Network.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\protobuf-net.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.Networking.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.Networking.xml
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.xml
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\Lidgren.Network.pdb
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\Lidgren.Network.xml
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\protobuf-net.pdb
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_bin\Debug\protobuf-net.xml
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_obj\Debug\CarcassonneCraft Client.CSharp.Plugins.csprojResolveAssemblyReference.cache
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_obj\Debug\Assembly-CSharp-firstpass.dll
+C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\Temp\UnityVS_obj\Debug\Assembly-CSharp-firstpass.pdb

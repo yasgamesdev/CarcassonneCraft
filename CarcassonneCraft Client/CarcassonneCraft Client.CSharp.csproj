@@ -13,7 +13,8 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.4.0f3</UnityVersion>
@@ -119,7 +120,9 @@
     <Compile Include="Assets\Scripts\Chunk.cs" />
     <Compile Include="Assets\Scripts\Chunk.pb.cs" />
     <Compile Include="Assets\Scripts\Combine.cs" />
+    <Compile Include="Assets\Scripts\Construction.cs" />
     <Compile Include="Assets\Scripts\DataType.cs" />
+    <Compile Include="Assets\Scripts\EditorInfo.pb.cs" />
     <Compile Include="Assets\Scripts\Env.cs" />
     <Compile Include="Assets\Scripts\Follow.cs" />
     <Compile Include="Assets\Scripts\GCli.cs" />
@@ -140,6 +143,9 @@
     <Compile Include="Assets\Scripts\PushData.pb.cs" />
     <Compile Include="Assets\Scripts\RequestAllAreaInfo.pb.cs" />
     <Compile Include="Assets\Scripts\RequestChunkInfo.pb.cs" />
+    <Compile Include="Assets\Scripts\RequestForkInfo.pb.cs" />
+    <Compile Include="Assets\Scripts\SelectInfo.pb.cs" />
+    <Compile Include="Assets\Scripts\SetBlockInfo.pb.cs" />
     <Compile Include="Assets\Scripts\World.cs" />
     <Compile Include="Assets\Scripts\XZNum.cs" />
     <Compile Include="Assets\UnityChan\Scripts\AutoBlink.cs" />

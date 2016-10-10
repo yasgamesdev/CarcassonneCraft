@@ -163,6 +163,20 @@ namespace CarcassonneCraft
             }
         }
 
+        public static bool IsInsideWorld(int worldx, int worldy, int worldz)
+        {
+            if (0 <= worldx && worldx < XBlockN * XChunkN * XAreasN
+                && 0 <= worldz && worldz < ZBlockN * ZChunkN * ZAreasN
+                && 0 <= worldy && worldy < YBlockN)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static bool IsDefaultArea(int areaid, XZNum loadChunkPos)
         {
             XZNum areasNum = GetAreasNum(loadChunkPos);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lidgren.Network;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -70,16 +71,17 @@ namespace CarcassonneCraft
             XZNum areasNum = Env.GetAreasNum(playerPos);
 
             List<AreaInfo> infos = World.GetAllAreaInfo(areasNum);
-            for (int i = 0; i < 20; i++)
+            /*for (int i = 0; i < 20; i++)
             {
                 infos.Add(infos[0]);
-            }
+            }*/
 
             for (int i = 0; i < infos.Count; i++)
             {
                 GameObject node = GameObject.Instantiate(Resources.Load("Node"), content.transform) as GameObject;
                 node.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -30 * i);
                 node.GetComponent<NodeScript>().Init(infos[i], this);
+                nodes.Add(node);
             }
 
             content.GetComponent<RectTransform>().sizeDelta = new Vector2(content.GetComponent<RectTransform>().sizeDelta.x, 30 * infos.Count);
@@ -128,13 +130,30 @@ namespace CarcassonneCraft
             editorWindow.SetActive(true);
         }
 
+        public void RequestAllAreaInfo()
+        {
+            XZNum playerPos = Players.GetPlayerPos();
+            XZNum areasNum = Env.GetAreasNum(playerPos);
+
+            RequestAllAreaInfo info = new RequestAllAreaInfo();
+            info.xareasnum = areasNum.xnum;
+            info.zareasnum = areasNum.znum;
+            GCli.Send(MessageType.RequestAllAreaInfo, GCli.Serialize<RequestAllAreaInfo>(info), NetDeliveryMethod.ReliableOrdered);
+        }
+
         public void SendFork()
         {
             CloseAllWindows();
 
             AreaInfo info = currentAreaInfo;
             string areaname = forkInput.text;
-            Debug.Log("fork:" + areaname);
+
+            RequestForkInfo fork = new RequestForkInfo();
+            fork.areaid = currentAreaInfo.areaid;
+            fork.forkname = forkInput.text;
+            fork.xareasnum = currentAreaInfo.xareasnum;
+            fork.zareasnum = currentAreaInfo.zareasnum;
+            GCli.Send(MessageType.RequestFork, GCli.Serialize<RequestForkInfo>(fork), NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendAddEditor()
@@ -143,7 +162,11 @@ namespace CarcassonneCraft
 
             AreaInfo info = currentAreaInfo;
             string username = addInput.text;
-            Debug.Log("add:" + username);
+
+            EditorInfo editor = new EditorInfo();
+            editor.areaid = info.areaid;
+            editor.username = username;
+            GCli.Send(MessageType.RequestAddEditor, GCli.Serialize<EditorInfo>(editor), NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendRemoveEditor()
@@ -152,7 +175,11 @@ namespace CarcassonneCraft
 
             AreaInfo info = currentAreaInfo;
             string username = removeInput.text;
-            Debug.Log("remove:" + username);
+
+            EditorInfo editor = new EditorInfo();
+            editor.areaid = info.areaid;
+            editor.username = username;
+            GCli.Send(MessageType.RequestRemoveEditor, GCli.Serialize<EditorInfo>(editor), NetDeliveryMethod.ReliableOrdered);
         }
     }
 }

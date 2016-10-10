@@ -20,6 +20,11 @@ namespace CarcassonneCraft
             players.Add(connection, new Player(connection, init));
         }
 
+        public static void DeletePlayer(NetConnection connection)
+        {
+            players.Remove(connection);
+        }
+
         public static bool IsAuthDone(NetConnection connection)
         {
             return players.ContainsKey(connection);
@@ -28,6 +33,11 @@ namespace CarcassonneCraft
         public static int GetUserID(NetConnection connection)
         {
             return players[connection].init.sync.userid;
+        }
+
+        public static void UpdateSelect(NetConnection connection, SelectInfo select)
+        {
+            players[connection].init.selects[select.selectindex] = select.areaid;
         }
     }
 }

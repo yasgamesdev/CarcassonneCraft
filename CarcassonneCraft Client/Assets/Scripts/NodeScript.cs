@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lidgren.Network;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,8 +16,10 @@ namespace CarcassonneCraft
         Text userName;
         [SerializeField]
         Text rating;
+        //[SerializeField]
+        //Toggle good;
         [SerializeField]
-        Toggle good;
+        GameObject hearticon;
         [SerializeField]
         GameObject selectButton;
         [SerializeField]
@@ -31,7 +34,7 @@ namespace CarcassonneCraft
         AreaInfo info;
         PanelScript parent;
 
-        bool firstTime = true;
+        //bool firstTime = true;
 
         public void Init(AreaInfo info, PanelScript parent)
         {
@@ -41,7 +44,8 @@ namespace CarcassonneCraft
             areaName.text = info.areaname;
             userName.text = info.username;
             rating.text = info.rating.ToString();
-            good.isOn = info.rated;
+            hearticon.SetActive(info.rated);
+            //good.isOn = info.rated;
 
             int areaid = Players.GetSelectArea(new XZNum(info.xareasnum, info.zareasnum));
             if(areaid == info.areaid)
@@ -59,7 +63,7 @@ namespace CarcassonneCraft
 
             foreach(UserInfo user in info.editusers)
             {
-                if(userid == info.userid)
+                if(userid == user.userid)
                 {
                     constractable.SetActive(true);
                     break;
@@ -69,15 +73,25 @@ namespace CarcassonneCraft
 
         public void GoodClicked()
         {
-            if (firstTime)
+            /*if (firstTime)
             {
                 firstTime = false;
             }
             else
             {
-                bool value = good.isOn;
-                Debug.Log("good:" + value);
-            }
+                //bool value = good.isOn;
+
+                PressGoodInfo packet = new PressGoodInfo();
+                packet.areaid = info.areaid;
+                packet.good = !info.rated;
+
+                GCli.Send(MessageType.PressGoodButton, GCli.Serialize<PressGoodInfo>(packet), NetDeliveryMethod.ReliableOrdered);
+            }*/
+            PressGoodInfo packet = new PressGoodInfo();
+            packet.areaid = info.areaid;
+            packet.good = !info.rated;
+
+            GCli.Send(MessageType.PressGoodButton, GCli.Serialize<PressGoodInfo>(packet), NetDeliveryMethod.ReliableOrdered);
         }
 
         public void ForkPressed()
@@ -87,7 +101,11 @@ namespace CarcassonneCraft
 
         public void SelectPressed()
         {
-            Debug.Log("select:" + info.areaid);
+            SelectInfo select = new SelectInfo();
+            select.areaid = info.areaid;
+            select.selectindex = info.xareasnum + info.zareasnum * Env.XAreasN;
+
+            GCli.Send(MessageType.RequestSelect, GCli.Serialize<SelectInfo>(select), NetDeliveryMethod.ReliableOrdered);
         }
 
         public void ShowEditorsPressed()

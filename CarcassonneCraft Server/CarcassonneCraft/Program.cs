@@ -67,6 +67,12 @@ namespace CarcassonneCraft
             GSrv.SetPacketHandler(MessageType.RequestChunkDiffs, DataType.Bytes, RequestChunkDiffsHandler);
             GSrv.SetPacketHandler(MessageType.RequestAllAreaInfo, DataType.Bytes, RequestAllAreaInfoHandler);
             GSrv.SetPacketHandler(MessageType.PressGoodButton, DataType.Bytes, PressGoodButtonHandler);
+            GSrv.SetPacketHandler(MessageType.RequestFork, DataType.Bytes, RequestForkHandler);
+            GSrv.SetPacketHandler(MessageType.RequestSelect, DataType.Bytes, RequestSelectHandler);
+            GSrv.SetPacketHandler(MessageType.RequestAddEditor, DataType.Bytes, RequestAddEditorHandler);
+            GSrv.SetPacketHandler(MessageType.RequestRemoveEditor, DataType.Bytes, RequestRemoveEditorHandler);
+            GSrv.SetPacketHandler(MessageType.SetBlock, DataType.Bytes, SetBlockHandler);
+            GSrv.SetPacketHandler(MessageType.ResetBlock, DataType.Bytes, ResetBlockHandler);
             GSrv.Listen("CarcassonneCraft0.1", port);
 
             while (!exit)
@@ -143,11 +149,13 @@ namespace CarcassonneCraft
         static public void ConnectHandler(NetConnection connection, object data)
         {
             PlayerInitData player = GSQLite.LoginUser("hiro", new byte[32]);
+            Players.AddPlayer(connection, player);
+            GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<PlayerInitData>(player), connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static public void DisconnectHandler(NetConnection connection, object data)
         {
-            //ObjectManager.DeletePlayer(connection);
+            Players.DeletePlayer(connection);
         }
 
         static public void DebugHandler(NetConnection connection, object data)
@@ -168,7 +176,7 @@ namespace CarcassonneCraft
             AreaInfo info = GSQLite.GetAreaInfo(areaid, userid);
             if(info != null)
             {
-
+                GSrv.Send(MessageType.ReplyAreaInfo, GSrv.Serialize<AreaInfo>(info), connection, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -184,7 +192,7 @@ namespace CarcassonneCraft
             Chunk chunk = GSQLite.GetChunkDiffs(request);
             if(chunk != null)
             {
-
+                GSrv.Send(MessageType.ReplyChunkDiffs, GSrv.Serialize<Chunk>(chunk), connection, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -199,6 +207,8 @@ namespace CarcassonneCraft
 
             int userid = Players.GetUserID(connection);
             AreaInfos infos = GSQLite.GetAllAreaInfo(request, userid);
+
+            GSrv.Send(MessageType.ReplyAllAreaInfo, GSrv.Serialize<AreaInfos>(infos), connection, NetDeliveryMethod.ReliableOrdered);
         }
 
         static public void PressGoodButtonHandler(NetConnection connection, object data)
@@ -211,10 +221,142 @@ namespace CarcassonneCraft
             }
 
             int userid = Players.GetUserID(connection);
+            GSQLite.AcceptGoodRequest(push, userid);
+
             AreaInfo info = GSQLite.GetAreaInfo(push.areaid, userid);
             if (info != null)
             {
+                GSrv.Send(MessageType.ReplyLatestRating, GSrv.Serialize<AreaInfo>(info), connection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
 
+        static public void RequestForkHandler(NetConnection connection, object data)
+        {
+            RequestForkInfo fork = GSrv.Deserialize<RequestForkInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            AreaInfo info = GSQLite.Fork(fork, userid);
+            if (info != null)
+            {
+                GSrv.Send(MessageType.ReplyFork, GSrv.Serialize<AreaInfo>(info), connection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        static public void RequestSelectHandler(NetConnection connection, object data)
+        {
+            SelectInfo select = GSrv.Deserialize<SelectInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            if(select.selectindex < 0 || Env.XAreasN * Env.ZAreasN <= select.selectindex)
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            GSQLite.Select(select, userid);
+            Players.UpdateSelect(connection, select);
+
+            GSrv.Send(MessageType.ReplySelect, GSrv.Serialize<SelectInfo>(select), connection, NetDeliveryMethod.ReliableOrdered);
+        }
+
+        static public void RequestAddEditorHandler(NetConnection connection, object data)
+        {
+            EditorInfo editor = GSrv.Deserialize<EditorInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            AreaInfo info = GSQLite.AddEditor(editor, userid);
+            if (info != null)
+            {
+                GSrv.Send(MessageType.ReplyAddEditor, GSrv.Serialize<AreaInfo>(info), connection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        static public void RequestRemoveEditorHandler(NetConnection connection, object data)
+        {
+            EditorInfo editor = GSrv.Deserialize<EditorInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            AreaInfo info = GSQLite.RemoveEditor(editor, userid);
+            if (info != null)
+            {
+                GSrv.Send(MessageType.ReplyRemoveEditor, GSrv.Serialize<AreaInfo>(info), connection, NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        static public void SetBlockHandler(NetConnection connection, object data)
+        {
+            SetBlockInfo block = GSrv.Deserialize<SetBlockInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int worldx = block.x + (block.xchunknum * Env.XBlockN) + (block.xareasnum * Env.XBlockN * Env.XChunkN);
+            int worldz = block.z + (block.zchunknum * Env.ZBlockN) + (block.zareasnum * Env.ZBlockN * Env.ZChunkN);
+
+            if(!Env.IsInsideWorld(worldx, block.y, worldz))
+            {
+                return;
+            }
+
+            int blocktype = Env.GetBlockType(worldx, block.y, worldz);
+            if(block.blocktype == blocktype)
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            bool success = GSQLite.SetBlock(block, userid);
+
+            if(success)
+            {
+                GSrv.SendToAll(MessageType.BroadcastSetBlock, GSrv.Serialize<SetBlockInfo>(block), NetDeliveryMethod.ReliableOrdered);
+            }
+        }
+
+        static public void ResetBlockHandler(NetConnection connection, object data)
+        {
+            SetBlockInfo block = GSrv.Deserialize<SetBlockInfo>((byte[])data);
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            int worldx = block.x + (block.xchunknum * Env.XBlockN) + (block.xareasnum * Env.XBlockN * Env.XChunkN);
+            int worldz = block.z + (block.zchunknum * Env.ZBlockN) + (block.zareasnum * Env.ZBlockN * Env.ZChunkN);
+
+            if (!Env.IsInsideWorld(worldx, block.y, worldz))
+            {
+                return;
+            }
+
+            int userid = Players.GetUserID(connection);
+            bool success = GSQLite.ResetBlock(block, userid);
+
+            if (success)
+            {
+                GSrv.SendToAll(MessageType.BroadcastResetBlock, GSrv.Serialize<SetBlockInfo>(block), NetDeliveryMethod.ReliableOrdered);
             }
         }
 

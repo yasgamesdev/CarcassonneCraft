@@ -29,5 +29,17 @@ namespace CarcassonneCraft
         ReplyAllAreaInfo,
         PressGoodButton,
         ReplyLatestRating,
+        RequestFork,
+        ReplyFork,
+        RequestSelect,
+        ReplySelect,
+        RequestAddEditor,
+        ReplyAddEditor,
+        RequestRemoveEditor,
+        ReplyRemoveEditor,
+        SetBlock,
+        BroadcastSetBlock,
+        ResetBlock,
+        BroadcastResetBlock,
     }
 }

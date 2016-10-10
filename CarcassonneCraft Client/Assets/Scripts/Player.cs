@@ -58,5 +58,10 @@ namespace CarcassonneCraft
             prefab.GetInstance().GetComponent<FirstPersonController>().SetCursorLock(active);
             prefab.GetInstance().GetComponent<FirstPersonController>().enabled = active;
         }
+
+        public void UpdateSelect(SelectInfo select)
+        {
+            init.selects[select.selectindex] = select.areaid;
+        }
     }
 }

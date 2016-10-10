@@ -40,6 +40,11 @@ namespace CarcassonneCraft
             return player.GetUserID();
         }
 
+        public static void UpdateSelect(SelectInfo select)
+        {
+            player.UpdateSelect(select);
+        }
+
         /*static Player player;
         static Dictionary<int, ClientObject>[] objs;
 

@@ -49,6 +49,11 @@ namespace CarcassonneCraft
                 }
             }
         }
+
+        public static int GetMaxCount()
+        {
+            return types.Length;
+        }
     }
 
     public class BlockType

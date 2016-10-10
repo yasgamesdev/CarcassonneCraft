@@ -22,7 +22,19 @@ namespace CarcassonneCraft
             Construction(blocks, areasNum, loadChunkNum);
         }
 
-        public void DestroyPrefab(XZNum unloadChunkPos)
+        public void CreatePrefab(int p_xareasnum, int p_zareasnum, int p_xchunknum, int p_zchunknum)
+        {
+            XZNum areasNum = new XZNum(p_xareasnum, p_zareasnum);
+            XZNum loadChunkNum = new XZNum(p_xchunknum, p_zchunknum);
+
+            int[,,] blocks = new int[Env.XBlockN, Env.YBlockN, Env.ZBlockN];
+            LoadDefaultBlocks(blocks, areasNum, loadChunkNum);
+            CalculateDiffs(blocks, diffs);
+            DeleteHideBlocks(blocks);
+            Construction(blocks, areasNum, loadChunkNum);
+        }
+
+        public void DestroyPrefab(/*XZNum unloadChunkPos*/)
         {
             if(IsPrefabLoaded())
             {
@@ -91,6 +103,77 @@ namespace CarcassonneCraft
             {
                 blocks[block.x, block.y, block.z] = 0;
             }
+        }
+
+        public void SetBlock(SetBlockInfo block)
+        {
+            foreach(Block b in diffs)
+            {
+                if(b.x == block.x && b.y == block.y && b.z == block.z)
+                {
+                    b.blocktype = block.blocktype;
+                    if(IsPrefabLoaded())
+                    {
+                        DestroyPrefab();
+                        CreatePrefab(block.xareasnum, block.zareasnum, block.xchunknum, block.zchunknum);
+                        return;
+                    }
+                }
+            }
+
+            Block addBlock = new Block();
+            addBlock.x = block.x;
+            addBlock.y = block.y;
+            addBlock.z = block.z;
+            addBlock.blocktype = block.blocktype;
+            diffs.Add(addBlock);
+
+            if (IsPrefabLoaded())
+            {
+                DestroyPrefab();
+                CreatePrefab(block.xareasnum, block.zareasnum, block.xchunknum, block.zchunknum);
+            }
+        }
+
+        public void ResetBlock(SetBlockInfo block)
+        {
+            Block delete = null;
+            foreach (Block b in diffs)
+            {
+                if (b.x == block.x && b.y == block.y && b.z == block.z)
+                {
+                    delete = b;
+                    break;
+                    //b.blocktype = block.blocktype;
+                    /*if (IsPrefabLoaded())
+                    {
+                        DestroyPrefab();
+                        CreatePrefab(block.xareasnum, block.zareasnum, block.xchunknum, block.zchunknum);
+                        return;
+                    }*/
+                }
+            }
+
+            if(delete != null)
+            {
+                diffs.Remove(delete);
+
+                DestroyPrefab();
+                CreatePrefab(block.xareasnum, block.zareasnum, block.xchunknum, block.zchunknum);
+            }
+
+            /*Block addBlock = new Block();
+            addBlock.x = block.x;
+            addBlock.y = block.y;
+            addBlock.z = block.z;
+            addBlock.blocktype = block.blocktype;
+            diffs.Add(addBlock);
+
+            if (IsPrefabLoaded())
+            {
+                DestroyPrefab();
+                CreatePrefab(block.xareasnum, block.zareasnum, block.xchunknum, block.zchunknum);
+            }*/
         }
 
         void Construction(int[,,] blocks, XZNum areasNum, XZNum loadChunkNum)

@@ -163,6 +163,20 @@ namespace CarcassonneCraft
             }
         }
 
+        public static bool IsInsideWorld(int worldx, int worldy, int worldz)
+        {
+            if (0 <= worldx && worldx < XBlockN * XChunkN * XAreasN
+                && 0 <= worldz && worldz < ZBlockN * ZChunkN * ZAreasN
+                && 0 <= worldy && worldy < YBlockN)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public static bool IsDefaultArea(int areaid, XZNum loadChunkPos)
         {
             XZNum areasNum = GetAreasNum(loadChunkPos);
@@ -175,6 +189,14 @@ namespace CarcassonneCraft
             int z = worldPos.znum % (ZBlockN * ZChunkN);
 
             return new XZNum((int)(x / XBlockN), (int)(z / ZBlockN));
+        }
+
+        public static XZNum GetBlockNum(XZNum worldPos)
+        {
+            int x = worldPos.xnum % (XBlockN * XChunkN);
+            int z = worldPos.znum % (ZBlockN * ZChunkN);
+
+            return new XZNum(x % XBlockN, z % ZBlockN);
         }
 
         public static int GetDefaultAreaID(XZNum loadChunkPos)

@@ -30,6 +30,14 @@ namespace CarcassonneCraft
             world[info.xareasnum, info.zareasnum].AddAreaInfo(info);
         }
 
+        public static void AddAreaInfos(AreaInfos infos)
+        {
+            foreach (AreaInfo info in infos.infos)
+            {
+                world[info.xareasnum, info.zareasnum].AddAreaInfo(info);
+            }
+        }
+
         public static bool IsChunkLoaded(int areaid, XZNum loadChunkPos)
         {
             XZNum areasNum = Env.GetAreasNum(loadChunkPos);
@@ -40,6 +48,11 @@ namespace CarcassonneCraft
         {
             XZNum areasNum = Env.GetAreasNum(loadChunkPos);
             world[areasNum.xnum, areasNum.znum].LoadDefaultChunk(loadChunkPos);
+        }
+
+        public static void LoadChunk(Chunk chunk)
+        {
+            world[chunk.xareasnum, chunk.zareasnum].LoadChunk(chunk);
         }
 
         public static bool IsPrefabLoaded(int areaid, XZNum loadChunkPos)
@@ -60,9 +73,24 @@ namespace CarcassonneCraft
             world[areasNum.xnum, areasNum.znum].UnLoadPrefab(areaid, unloadChunkPos);
         }
 
+        public static void UnLoadAreaPrefab(int areaid, XZNum areasNum)
+        {
+            world[areasNum.xnum, areasNum.znum].UnLoadAreaPrefab(areaid);
+        }
+
         public static List<AreaInfo> GetAllAreaInfo(XZNum areasNum)
         {
             return world[areasNum.xnum, areasNum.znum].GetAllAreaInfo(areasNum);
+        }
+
+        public static void SetBlock(SetBlockInfo block)
+        {
+            world[block.xareasnum, block.zareasnum].SetBlock(block);
+        }
+
+        public static void ResetBlock(SetBlockInfo block)
+        {
+            world[block.xareasnum, block.zareasnum].ResetBlock(block);
         }
     }
 }

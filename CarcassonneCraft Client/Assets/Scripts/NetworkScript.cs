@@ -11,6 +11,9 @@ namespace CarcassonneCraft
 {
     public class NetworkScript : MonoBehaviour
     {
+        [SerializeField]
+        PanelScript panel;
+
         float frameSpan = 0;
 
         void Start()
@@ -19,14 +22,18 @@ namespace CarcassonneCraft
             BlockTypes.Init();
             World.Init();
 
-            PlayerInitDatas players = CreateDummyPlayerInitDatas();
-            Players.AddPlayerInitDatas(players);
+            GCli.Init();
+            GCli.SetConnectPacketHandler(ConnectHandler);
+            GCli.Connect("CarcassonneCraft0.1", "localhost", 15127);
+
+            //PlayerInitDatas players = CreateDummyPlayerInitDatas();
+            //Players.AddPlayerInitDatas(players);
 
             /*GCli.SetPacketHandler(MessageType.Snapshot, DataType.Bytes, SnapshotHandler);
             GCli.SetPacketHandler(MessageType.Join, DataType.Bytes, JoinHandler);
             GCli.SetPacketHandler(MessageType.BroadcastMessage, DataType.Bytes, BroadcastMessageHandler);*/
 
-            StartCoroutine("AutoLoadChunk");
+            //StartCoroutine("AutoLoadChunk");
         }
 
         void Update()
@@ -36,7 +43,7 @@ namespace CarcassonneCraft
                 Application.Quit();
             }
 
-            //GCli.Receive();
+            GCli.Receive();
 
             frameSpan += Time.deltaTime;
             if (frameSpan >= 0.1f)
@@ -57,6 +64,138 @@ namespace CarcassonneCraft
         void OnDestroy()
         {
             GCli.Shutdown();
+        }
+
+        public void ConnectHandler(NetConnection connection, object data)
+        {
+            GCli.UnsetPacketHandler(MessageType.Connect);
+            GCli.SetPacketHandler(MessageType.LoginSuccess, DataType.Bytes, LoginSuccessHandler);
+            /*GCli.SetPacketHandler(MessageType.LoginFailed, DataType.String, LoginFailedHandler);
+            GCli.SetPacketHandler(MessageType.RegisterSuccess, DataType.Bytes, RegisterSuccessHandler);
+            GCli.SetPacketHandler(MessageType.RegisterFailed, DataType.String, RegisterFailedHandler);*/
+        }
+
+        public void LoginSuccessHandler(NetConnection connection, object data)
+        {
+            GCli.UnsetPacketHandler(MessageType.LoginSuccess);
+            PlayerInitData init = GCli.Deserialize<PlayerInitData>((byte[])data);
+            PlayerInitDatas inits = new PlayerInitDatas();
+            inits.player = init;
+
+            Players.AddPlayerInitDatas(inits);
+
+            GCli.SetPacketHandler(MessageType.ReplyAreaInfo, DataType.Bytes, ReplyAreaInfoHandler);
+            GCli.SetPacketHandler(MessageType.ReplyFork, DataType.Bytes, ReplyForkHandler);
+            GCli.SetPacketHandler(MessageType.ReplyAllAreaInfo, DataType.Bytes, ReplyAllAreaInfoHandler);
+            GCli.SetPacketHandler(MessageType.ReplySelect, DataType.Bytes, ReplySelectHandler);
+            GCli.SetPacketHandler(MessageType.ReplyChunkDiffs, DataType.Bytes, ReplyChunkDiffsHandler);
+            GCli.SetPacketHandler(MessageType.ReplyLatestRating, DataType.Bytes, ReplyLatestRatingHandler);
+            GCli.SetPacketHandler(MessageType.ReplyAddEditor, DataType.Bytes, ReplyAddEditorHandler);
+            GCli.SetPacketHandler(MessageType.ReplyRemoveEditor, DataType.Bytes, ReplyRemoveEditorHandler);
+            GCli.SetPacketHandler(MessageType.BroadcastSetBlock, DataType.Bytes, BroadcastSetBlockHandler);
+            GCli.SetPacketHandler(MessageType.BroadcastResetBlock, DataType.Bytes, BroadcastResetBlockHandler);
+
+            StartCoroutine("AutoLoadChunk");
+        }
+
+        public void ReplyAreaInfoHandler(NetConnection connection, object data)
+        {
+            AreaInfo info = GCli.Deserialize<AreaInfo>((byte[])data);
+
+            World.AddAreaInfo(info);
+        }
+
+        public void ReplyForkHandler(NetConnection connection, object data)
+        {
+            AreaInfo info = GCli.Deserialize<AreaInfo>((byte[])data);
+
+            World.AddAreaInfo(info);
+            if(panel.IsPanelOpen())
+            {
+                panel.CreateList();
+            }
+        }
+
+        public void ReplyAllAreaInfoHandler(NetConnection connection, object data)
+        {
+            AreaInfos infos = GCli.Deserialize<AreaInfos>((byte[])data);
+
+            World.AddAreaInfos(infos);
+            if (panel.IsPanelOpen())
+            {
+                panel.CreateList();
+            }
+        }
+
+        public void ReplySelectHandler(NetConnection connection, object data)
+        {
+            SelectInfo select = GCli.Deserialize<SelectInfo>((byte[])data);
+
+            int xareasnum = select.selectindex % Env.XAreasN;
+            int zareasnum = select.selectindex / Env.XAreasN;
+            int oldAreaID = Players.GetSelectArea(new XZNum(xareasnum, zareasnum));
+
+            World.UnLoadAreaPrefab(oldAreaID, new XZNum(xareasnum, zareasnum));
+
+            Players.UpdateSelect(select);
+            if (panel.IsPanelOpen())
+            {
+                panel.CreateList();
+            }
+        }
+
+        public void ReplyChunkDiffsHandler(NetConnection connection, object data)
+        {
+            Chunk chunk = GCli.Deserialize<Chunk>((byte[])data);
+
+            World.LoadChunk(chunk);
+        }
+
+        public void ReplyLatestRatingHandler(NetConnection connection, object data)
+        {
+            AreaInfo info = GCli.Deserialize<AreaInfo>((byte[])data);
+
+            World.AddAreaInfo(info);
+            if (panel.IsPanelOpen())
+            {
+                panel.CreateList();
+            }
+        }
+
+        public void ReplyAddEditorHandler(NetConnection connection, object data)
+        {
+            AreaInfo info = GCli.Deserialize<AreaInfo>((byte[])data);
+
+            World.AddAreaInfo(info);
+            if (panel.IsPanelOpen())
+            {
+                panel.CreateList();
+            }
+        }
+
+        public void ReplyRemoveEditorHandler(NetConnection connection, object data)
+        {
+            AreaInfo info = GCli.Deserialize<AreaInfo>((byte[])data);
+
+            World.AddAreaInfo(info);
+            if (panel.IsPanelOpen())
+            {
+                panel.CreateList();
+            }
+        }
+
+        public void BroadcastSetBlockHandler(NetConnection connection, object data)
+        {
+            SetBlockInfo block = GCli.Deserialize<SetBlockInfo>((byte[])data);
+
+            World.SetBlock(block);
+        }
+
+        public void BroadcastResetBlockHandler(NetConnection connection, object data)
+        {
+            SetBlockInfo block = GCli.Deserialize<SetBlockInfo>((byte[])data);
+
+            World.ResetBlock(block);
         }
 
         /*public void JoinHandler(NetConnection connection, object data)
@@ -139,7 +278,8 @@ namespace CarcassonneCraft
 
                     if (!World.IsAreaLoaded(areaid, areasNum))
                     {
-                        DummyInquiryArea(areaid);
+                        //DummyInquiryArea(areaid);
+                        GCli.Send(MessageType.RequestAreaInfo, areaid, NetDeliveryMethod.ReliableOrdered);
                     }
                     else
                     {
@@ -208,7 +348,16 @@ namespace CarcassonneCraft
                 {
                     XZNum areasNum = Env.GetAreasNum(loadChunkPos);
                     XZNum loadChunkNum = Env.GetChunkNum(loadChunkPos);
-                    DummyInquiryChunk(areaid, loadChunkNum);
+
+                    RequestChunkInfo chunk = new RequestChunkInfo();
+                    chunk.areaid = areaid;
+                    chunk.xareasnum = areasNum.xnum;
+                    chunk.zareasnum = areasNum.znum;
+                    chunk.xchunknum = loadChunkNum.xnum;
+                    chunk.zchunknum = loadChunkNum.znum;
+
+                    GCli.Send(MessageType.RequestChunkDiffs, GCli.Serialize<RequestChunkInfo>(chunk), NetDeliveryMethod.ReliableOrdered);
+                    //DummyInquiryChunk(areaid, loadChunkNum);
                 }
             }
         }

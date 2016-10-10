@@ -23,7 +23,7 @@ namespace CarcassonneCraft
         {
             if(areas.ContainsKey(info.areaid))
             {
-                areas[info.areaid] = new Area(info);
+                areas[info.areaid].UpdateAreaInfo(info);
             }
             else
             {
@@ -40,6 +40,14 @@ namespace CarcassonneCraft
         {
             int areaid = Env.GetDefaultAreaID(loadChunkPos);
             areas[areaid].LoadDefaultChunk(loadChunkPos);
+        }
+
+        public void LoadChunk(Chunk chunk)
+        {
+            if (areas.ContainsKey(chunk.areaid))
+            {
+                areas[chunk.areaid].LoadChunk(chunk);
+            }
         }
 
         public bool IsPrefabLoaded(int areaid, XZNum loadChunkPos)
@@ -83,6 +91,30 @@ namespace CarcassonneCraft
             }
 
             return ret;
+        }
+
+        public void UnLoadAreaPrefab(int areaid)
+        {
+            if (areas.ContainsKey(areaid))
+            {
+                areas[areaid].UnLoadAreaPrefab();
+            }
+        }
+
+        public void SetBlock(SetBlockInfo block)
+        {
+            if (areas.ContainsKey(block.areaid))
+            {
+                areas[block.areaid].SetBlock(block);
+            }
+        }
+
+        public void ResetBlock(SetBlockInfo block)
+        {
+            if (areas.ContainsKey(block.areaid))
+            {
+                areas[block.areaid].ResetBlock(block);
+            }
         }
     }
 }
