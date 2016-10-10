@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CarcassonneCraft
 {
-    class Player
+    public class Player
     {
         public NetConnection connection { get; private set; }
         public PlayerInitData init { get; private set; }
@@ -18,13 +18,14 @@ namespace CarcassonneCraft
             this.init = init;
         }
 
-        /*public void Push(PushData data)
+        public void Push(PushData data)
         {
-            init.sync.xPos = data.xPos;
-            init.sync.yPos = data.yPos;
-            init.sync.zPos = data.zPos;
-            init.sync.yRot = data.yRot;
+            init.sync.xpos = data.xpos;
+            init.sync.ypos = data.ypos;
+            init.sync.zpos = data.zpos;
+            init.sync.xrot = data.xrot;
+            init.sync.yrot = data.yrot;
             init.sync.animestate = data.animestate;
-        }*/
+        }
     }
 }

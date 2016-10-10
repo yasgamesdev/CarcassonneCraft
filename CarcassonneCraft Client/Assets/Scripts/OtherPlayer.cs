@@ -13,9 +13,11 @@ namespace CarcassonneCraft
 
         PrefabManager prefab, name;
 
-        bool updated = true;
+        public bool updated = true;
 
-        public OtherPlayer(OtherPlayerInitData init)
+        Transform player;
+
+        public OtherPlayer(OtherPlayerInitData init, Player player)
         {
             this.init = init;
             previous = init.sync;
@@ -27,11 +29,24 @@ namespace CarcassonneCraft
             name = new PrefabManager();
             name.LoadPrefab("NamePlate", GameObject.Find("Canvas").transform);
             name.GetInstance().GetComponent<Follow>().Init(prefab.GetInstance().transform, init.username);
+
+            this.player = player.GetPrefabTransform();
         }
 
         public void Update(float delta)
         {
             prefab.GetInstance().GetComponent<OtherPlayerPrefabScript>().Interpolation(init.sync, delta);
+
+            Vector3 dir = prefab.GetInstance().transform.position - player.position;
+
+            if(Vector3.Dot(player.forward, dir) >= 0)
+            {
+                name.GetInstance().SetActive(true);
+            }
+            else
+            {
+                name.GetInstance().SetActive(false);
+            }
         }
 
         public void Destroy()

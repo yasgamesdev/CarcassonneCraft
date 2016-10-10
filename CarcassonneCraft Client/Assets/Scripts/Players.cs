@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Lidgren.Network;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,7 +17,7 @@ namespace CarcassonneCraft
 
             foreach (OtherPlayerInitData init in players.otherplayers)
             {
-                otherPlayers.Add(init.sync.userid, new OtherPlayer(init));
+                otherPlayers.Add(init.sync.userid, new OtherPlayer(init, player));
             }
         }
 
@@ -45,6 +46,71 @@ namespace CarcassonneCraft
             player.UpdateSelect(select);
         }
 
+        public static PushData GetPushData()
+        {
+            return player.GetPushData();
+        }
+
+        public static void UpdatePlayerSyncData(List<PlayerSyncData> syncs)
+        {
+            foreach (OtherPlayer other in otherPlayers.Values)
+            {
+                other.ResetUpdateFlag();
+            }
+
+            foreach (PlayerSyncData sync in syncs)
+            {
+                if (sync.userid == player.GetUserID())
+                {
+                    player.ReceiveLatestData(sync);
+                }
+                else if (otherPlayers.ContainsKey(sync.userid))
+                {
+                    otherPlayers[sync.userid].ReceiveLatestData(sync);
+                }
+                else
+                {
+                    GCli.Send(MessageType.RequestInitData, sync.userid, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
+
+            List<OtherPlayer> removes = new List<OtherPlayer>();
+            foreach(OtherPlayer other in otherPlayers.Values)
+            {
+                if(other.updated == false)
+                {
+                    removes.Add(other);
+                }
+            }
+            foreach(OtherPlayer other in removes)
+            {
+                other.Destroy();
+                otherPlayers.Remove(other.GetUserID());
+            }
+            /*var removes = otherPlayers.Where(f => f.Value.updated == false).ToArray();
+            foreach (var remove in removes)
+            {
+                remove.Value.Destroy();
+                otherPlayers.Remove(remove.Key);
+            }*/
+        }
+
+        public static void AddOtherPlayer(OtherPlayerInitData other)
+        {
+            if (!otherPlayers.ContainsKey(other.sync.userid))
+            {
+                otherPlayers.Add(other.sync.userid, new OtherPlayer(other, player));
+            }
+        }
+
+        public static void FixedUpdate(float delta)
+        {
+            foreach (OtherPlayer other in otherPlayers.Values)
+            {
+                other.Update(delta);
+            }
+        }
+
         /*static Player player;
         static Dictionary<int, ClientObject>[] objs;
 
@@ -60,17 +126,7 @@ namespace CarcassonneCraft
             {
                 objs[i] = new Dictionary<int, ClientObject>();
             }
-        }
-
-        public static void FixedUpdate(ObjectType type, float delta)
-        {
-            Dictionary<int, ClientObject> targets = objs[(int)type];
-
-            foreach (KeyValuePair<int, ClientObject> tar in targets)
-            {
-                tar.Value.Update(delta);
-            }
-        }
+        }        
 
         public static void AddPlayer(PlayerInitData init)
         {
@@ -118,40 +174,7 @@ namespace CarcassonneCraft
         {
             Dictionary<int, ClientObject> targets = objs[(int)type];
             targets.Add(obj.GetObjID(), obj);
-        }
-
-        public static void UpdatePlayerSyncData(List<PlayerSyncData> syncs)
-        {
-            Dictionary<int, ClientObject> targets = objs[(int)ObjectType.Player];
-
-            foreach (KeyValuePair<int, ClientObject> tar in targets)
-            {
-                tar.Value.ResetUpdateFlag();
-            }
-
-            foreach (PlayerSyncData sync in syncs)
-            {
-                if(sync.userid == player.GetObjID())
-                {
-                    player.ReceiveLatestData(sync);
-                }
-                else if (targets.ContainsKey(sync.userid))
-                {
-                    ((OtherPlayer)targets[sync.userid]).ReceiveLatestData(sync);
-                }
-                else
-                {
-                    //warning
-                }
-            }
-
-            var removes = targets.Where(f => f.Value.updated == false).ToArray();
-            foreach (var remove in removes)
-            {
-                remove.Value.Destroy();
-                targets.Remove(remove.Key);
-            }
-        }
+        }        
 
         public static void CreateBalloon(MessageData data)
         {

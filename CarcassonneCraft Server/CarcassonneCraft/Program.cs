@@ -73,6 +73,8 @@ namespace CarcassonneCraft
             GSrv.SetPacketHandler(MessageType.RequestRemoveEditor, DataType.Bytes, RequestRemoveEditorHandler);
             GSrv.SetPacketHandler(MessageType.SetBlock, DataType.Bytes, SetBlockHandler);
             GSrv.SetPacketHandler(MessageType.ResetBlock, DataType.Bytes, ResetBlockHandler);
+            GSrv.SetPacketHandler(MessageType.Push, DataType.Bytes, PushHandler);
+            GSrv.SetPacketHandler(MessageType.RequestInitData, DataType.Int32, RequestInitDataHandler);
             GSrv.Listen("CarcassonneCraft0.1", port);
 
             while (!exit)
@@ -82,10 +84,11 @@ namespace CarcassonneCraft
                 GSrv.Receive();
 
                 sendCount++;
-                if (sendCount == 3)
+                if (sendCount == 6)
                 {
                     sendCount = 0;
 
+                    SendSnapshot();
                     /*SyncDatas syncs = ObjectManager.GetSyncDatas();
                     GSrv.SendToAll(MessageType.Snapshot, GSrv.Serialize<SyncDatas>(syncs), NetDeliveryMethod.UnreliableSequenced);*/
                 }
@@ -100,6 +103,55 @@ namespace CarcassonneCraft
             GSrv.Shutdown();
             GSQLite.SaveAll();
             GSQLite.Close();
+        }
+
+        static void SendSnapshot()
+        {
+            Dictionary<int, List<Player>> players = Players.GetSnapshotPlayer();
+            foreach (List<Player> list in players.Values)
+            {
+                PlayerSyncDatas syncs = CreateSnapShot(list);
+                foreach (Player player in list)
+                {
+                    GSrv.Send(MessageType.Snapshot, GSrv.Serialize<PlayerSyncDatas>(syncs), player.connection, NetDeliveryMethod.UnreliableSequenced);
+                }
+            }
+        }
+
+        static PlayerSyncDatas CreateSnapShot(List<Player> list)
+        {
+            PlayerSyncDatas syncs = new PlayerSyncDatas();
+
+            foreach (Player player in list)
+            {
+                PlayerSyncData sync = new PlayerSyncData();
+                sync.userid = player.init.sync.userid;
+                sync.xpos = player.init.sync.xpos;
+                sync.ypos = player.init.sync.ypos;
+                sync.zpos = player.init.sync.zpos;
+                sync.xrot = player.init.sync.xrot;
+                sync.yrot = player.init.sync.yrot;
+                sync.animestate = player.init.sync.animestate;
+                syncs.syncs.Add(sync);
+            }
+
+            return syncs;
+        }
+
+        static public void RequestInitDataHandler(NetConnection connection, object data)
+        {
+            int userid = (int)data;
+
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            OtherPlayerInitData other = Players.GetPlayerInitData(userid);
+            if(other != null)
+            {
+                GSrv.Send(MessageType.ReplyInitData, GSrv.Serialize<OtherPlayerInitData>(other), connection, NetDeliveryMethod.ReliableOrdered);
+            }
         }
 
         static bool ReadFile(string path)
@@ -148,9 +200,20 @@ namespace CarcassonneCraft
 
         static public void ConnectHandler(NetConnection connection, object data)
         {
-            PlayerInitData player = GSQLite.LoginUser("hiro", new byte[32]);
-            Players.AddPlayer(connection, player);
-            GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<PlayerInitData>(player), connection, NetDeliveryMethod.ReliableOrdered);
+            if (Players.GetPlayerCount() == 0)
+            {
+                PlayerInitData player = GSQLite.LoginUser("hiro", new byte[32]);
+                Players.AddPlayer(connection, player);
+                GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<PlayerInitData>(player), connection, NetDeliveryMethod.ReliableOrdered);
+                return;
+            }
+            else if (Players.GetPlayerCount() == 1)
+            {
+                PlayerInitData player = GSQLite.LoginUser("yas", new byte[32]);
+                Players.AddPlayer(connection, player);
+                GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<PlayerInitData>(player), connection, NetDeliveryMethod.ReliableOrdered);
+                return;
+            }
         }
 
         static public void DisconnectHandler(NetConnection connection, object data)
@@ -409,16 +472,21 @@ namespace CarcassonneCraft
             {
                 GSrv.Send(MessageType.RegisterFailed, "Register Failed", connection, NetDeliveryMethod.ReliableOrdered);
             }
-        }
+        }*/
 
         static public void PushHandler(NetConnection connection, object data)
         {
             PushData push = GSrv.Deserialize<PushData>((byte[])data);
 
-            ObjectManager.Push(connection, push);
+            if (!Players.IsAuthDone(connection))
+            {
+                return;
+            }
+
+            Players.Push(connection, push);
         }
 
-        static public void SendMessageHandler(NetConnection connection, object data)
+        /*static public void SendMessageHandler(NetConnection connection, object data)
         {
             string text = (string)data;
 

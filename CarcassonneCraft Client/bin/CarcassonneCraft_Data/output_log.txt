@@ -22,49 +22,13 @@ Platform assembly: C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft
 Loading C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\bin\CarcassonneCraft_Data\Managed\Lidgren.Network.dll into Unity Child Domain
 Platform assembly: C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\bin\CarcassonneCraft_Data\Managed\protobuf-net.dll (this message is harmless)
 Loading C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\bin\CarcassonneCraft_Data\Managed\protobuf-net.dll into Unity Child Domain
-- Completed reload, in  0.056 seconds
+- Completed reload, in  0.050 seconds
 Platform assembly: C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\bin\CarcassonneCraft_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Hiro\Documents\Git\CarcassonneCraft\CarcassonneCraft Client\bin\CarcassonneCraft_Data\Managed\System.dll (this message is harmless)
 desktop: 1920x1200 59Hz; virtual: 1920x1200 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.730333 ms
+UnloadTime: 0.678354 ms
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 18f0 -> priority: 1 
-good:True
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-good:False
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-remove:
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-good:True
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-good:False
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-good:True
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-good:False
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-good:True
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
-good:False
- 
-(Filename: C:/buildslave/unity/build/artifacts/generated/common/runtime/UnityEngineDebugBindings.gen.cpp Line: 42)
-
+  Thread -> id: 9e4 -> priority: 1 

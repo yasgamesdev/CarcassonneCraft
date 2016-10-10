@@ -46,9 +46,15 @@ namespace CarcassonneCraft
             GCli.Receive();
 
             frameSpan += Time.deltaTime;
-            if (frameSpan >= 0.1f)
+            if (frameSpan >= 0.2f)
             {
                 frameSpan = 0;
+
+                if(Players.GetPlayer() != null)
+                {
+                    PushData push = Players.GetPushData();
+                    GCli.Send(MessageType.Push, GCli.Serialize<PushData>(push), NetDeliveryMethod.UnreliableSequenced);
+                }
 
                 //ObjectManager.PushData();
             }
@@ -58,7 +64,7 @@ namespace CarcassonneCraft
 
         void FixedUpdate()
         {
-            //ObjectManager.FixedUpdate(ObjectType.Player, Time.deltaTime);
+            Players.FixedUpdate(Time.deltaTime);
         }
 
         void OnDestroy()
@@ -94,6 +100,8 @@ namespace CarcassonneCraft
             GCli.SetPacketHandler(MessageType.ReplyRemoveEditor, DataType.Bytes, ReplyRemoveEditorHandler);
             GCli.SetPacketHandler(MessageType.BroadcastSetBlock, DataType.Bytes, BroadcastSetBlockHandler);
             GCli.SetPacketHandler(MessageType.BroadcastResetBlock, DataType.Bytes, BroadcastResetBlockHandler);
+            GCli.SetPacketHandler(MessageType.Snapshot, DataType.Bytes, SnapshotHandler);
+            GCli.SetPacketHandler(MessageType.ReplyInitData, DataType.Bytes, ReplyInitDataHandler);
 
             StartCoroutine("AutoLoadChunk");
         }
@@ -202,13 +210,21 @@ namespace CarcassonneCraft
         {
             PlayerInitData init = GCli.Deserialize<PlayerInitData>((byte[])data);
             ObjectManager.AddObject(new OtherPlayer(init), ObjectType.Player);
-        }
+        }*/
 
         public void SnapshotHandler(NetConnection connection, object data)
         {
-            SyncDatas syncs = GCli.Deserialize<SyncDatas>((byte[])data);
-            ObjectManager.UpdatePlayerSyncData(syncs.syncs);
-        }*/
+            PlayerSyncDatas syncs = GCli.Deserialize<PlayerSyncDatas>((byte[])data);
+
+            Players.UpdatePlayerSyncData(syncs.syncs);
+        }
+
+        public void ReplyInitDataHandler(NetConnection connection, object data)
+        {
+            OtherPlayerInitData other = GCli.Deserialize<OtherPlayerInitData>((byte[])data);
+
+            Players.AddOtherPlayer(other);
+        }
 
         public PlayerInitDatas CreateDummyPlayerInitDatas()
         {

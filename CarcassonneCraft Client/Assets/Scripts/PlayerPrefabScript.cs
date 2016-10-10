@@ -14,8 +14,12 @@ namespace CarcassonneCraft
         [SerializeField]
         Transform fpsCamera;
 
+        PanelScript panel;
+
         public void Init(PlayerInitData init)
         {
+            panel = GameObject.Find("AreaInfoPanel").GetComponent<PanelScript>();
+
             transform.position = new Vector3(init.sync.xpos, init.sync.ypos, init.sync.zpos);
             transform.localEulerAngles = new Vector3(0, init.sync.yrot, 0);
         }
@@ -37,6 +41,17 @@ namespace CarcassonneCraft
             data.yrot = yrot;
             data.animestate = animestate;
             return data;
+        }
+
+        void Update()
+        {
+            if (!panel.IsPanelOpen())
+            {
+                if(Input.GetKeyDown(KeyCode.Q))
+                {
+                    transform.position = new Vector3(transform.position.x, 33, transform.position.z);
+                }
+            }
         }
     }
 }

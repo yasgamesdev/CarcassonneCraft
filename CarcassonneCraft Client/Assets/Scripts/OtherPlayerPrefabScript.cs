@@ -12,7 +12,9 @@ namespace CarcassonneCraft
         GameObject model;
         [SerializeField]
         Transform neck;
-        float xrot;
+        //float xrot;
+        float previous_xrot;
+        float latest_xrot;
 
         Animator anime;
         int animeState;
@@ -22,7 +24,9 @@ namespace CarcassonneCraft
             anime = GetComponentInChildren<Animator>();
 
             transform.position = new Vector3(init.sync.xpos, init.sync.ypos, init.sync.zpos);
-            this.xrot = init.sync.xrot;
+            //this.xrot = init.sync.xrot;
+            previous_xrot = init.sync.xrot;
+            latest_xrot = init.sync.xrot;
             model.transform.localEulerAngles = new Vector3(0, init.sync.yrot, 0);
             this.animeState = init.sync.animestate;
 
@@ -44,9 +48,11 @@ namespace CarcassonneCraft
         public void Interpolation(PlayerSyncData latest, float delta)
         {
             Vector3 latestPos = new Vector3(latest.xpos, latest.ypos, latest.zpos);
-            transform.position = Vector3.Lerp(transform.position, latestPos, delta * 10.0f);
+            transform.position = Vector3.Lerp(transform.position, latestPos, delta * 5.0f);
 
-            model.transform.localEulerAngles = new Vector3(0, Mathf.LerpAngle(model.transform.localEulerAngles.y, latest.yrot, delta * 10.0f), 0);
+            model.transform.localEulerAngles = new Vector3(0, Mathf.LerpAngle(model.transform.localEulerAngles.y, latest.yrot, delta * 5.0f), 0);
+            //xrot = latest.xrot;
+            latest_xrot = latest.xrot;
 
             if (this.animeState != latest.animestate)
             {
@@ -57,10 +63,12 @@ namespace CarcassonneCraft
 
         void LateUpdate()
         {
-            Quaternion memory = transform.localRotation;
-            transform.localRotation = Quaternion.identity;
-            neck.Rotate(new Vector3(xrot, 0, 0), Space.World);
-            transform.localRotation = memory;
+            previous_xrot = Mathf.LerpAngle(previous_xrot, latest_xrot, Time.deltaTime * 5.0f);
+
+            Quaternion memory = model.transform.localRotation;
+            model.transform.rotation = Quaternion.identity;
+            neck.Rotate(new Vector3(previous_xrot, 0, 0), Space.World);
+            model.transform.localRotation = memory;
         }
     }
 }

@@ -25,11 +25,16 @@ namespace CarcassonneCraft
             prefab.GetInstance().GetComponent<PlayerPrefabScript>().Init(init);
         }
 
-        public void PushData()
+        /*public void PushData()
         {
             PushData data = prefab.GetInstance().GetComponent<PlayerPrefabScript>().GetPushData();
 
             GCli.Send(MessageType.Push, GCli.Serialize<PushData>(data), NetDeliveryMethod.UnreliableSequenced);
+        }*/
+
+        public PushData GetPushData()
+        {
+            return prefab.GetInstance().GetComponent<PlayerPrefabScript>().GetPushData();
         }
 
         public int GetUserID()
@@ -62,6 +67,11 @@ namespace CarcassonneCraft
         public void UpdateSelect(SelectInfo select)
         {
             init.selects[select.selectindex] = select.areaid;
+        }
+
+        public Transform GetPrefabTransform()
+        {
+            return prefab.GetInstance().transform;
         }
     }
 }

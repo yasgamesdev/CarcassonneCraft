@@ -41,5 +41,7 @@ namespace CarcassonneCraft
         BroadcastSetBlock,
         ResetBlock,
         BroadcastResetBlock,
+        RequestInitData,
+        ReplyInitData,
     }
 }
