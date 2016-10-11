@@ -99,5 +99,18 @@ namespace CarcassonneCraft
 
             return null;
         }
+
+        public static void SaveData(NetConnection connection)
+        {
+            players[connection].SaveData();
+        }
+
+        public static void SaveAllPlayer()
+        {
+            foreach (Player player in players.Values)
+            {
+                player.SaveData();
+            }
+        }
     }
 }

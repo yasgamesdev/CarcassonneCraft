@@ -25,7 +25,7 @@ namespace CarcassonneCraft
                 con.Open();
                 CreateTable();
 
-                CreateDummyAccount();
+                //CreateDummyAccount();
             }  
         }
 
@@ -244,9 +244,9 @@ namespace CarcassonneCraft
                 cmd.Parameters.Add("animestate", System.Data.DbType.Int32);
 
                 cmd.Parameters["userid"].Value = userid;
-                cmd.Parameters["xpos"].Value = 5.0f;
+                cmd.Parameters["xpos"].Value = 256.0f;
                 cmd.Parameters["ypos"].Value = 33.0f;
-                cmd.Parameters["zpos"].Value = 5.0f;
+                cmd.Parameters["zpos"].Value = 256.0f;
                 cmd.Parameters["xrot"].Value = 0;
                 cmd.Parameters["yrot"].Value = 0;
                 cmd.Parameters["animestate"].Value = 0;
@@ -285,11 +285,6 @@ namespace CarcassonneCraft
             CreateAccount("yas", hash);
         }
 
-        public static void SaveAll()
-        {
-
-        }
-
         public static void Close()
         {
             con.Close();
@@ -297,14 +292,16 @@ namespace CarcassonneCraft
 
         public static bool IsAlreadyExistUser(string name)
         {
-            SQLiteCommand cmd = con.CreateCommand();
-            cmd.CommandText = "SELECT * FROM users WHERE name = @name";
-            cmd.Parameters.Add("name", System.Data.DbType.String);
-            cmd.Parameters["name"].Value = name;
-
-            using (SQLiteDataReader reader = cmd.ExecuteReader())
+            using (SQLiteCommand cmd = con.CreateCommand())
             {
-                return reader.HasRows;
+                cmd.CommandText = "SELECT * FROM users WHERE username = @username";
+                cmd.Parameters.Add("username", System.Data.DbType.String);
+                cmd.Parameters["username"].Value = name;
+
+                using (SQLiteDataReader reader = cmd.ExecuteReader())
+                {
+                    return reader.HasRows;
+                }
             }
         }
 
@@ -1110,30 +1107,32 @@ namespace CarcassonneCraft
                     return init;
                 }
             }
-        }
-
-        public static void SavePlayer(PlayerSyncData sync)
-        {
-            using (SQLiteCommand command = con.CreateCommand())
-            {
-                command.CommandText = "UPDATE players SET xpos = @xpos, ypos = @ypos, zpos = @zpos, yrot = @yrot, animestate = @animestate WHERE userid = @userid";
-
-                command.Parameters.Add("userid", System.Data.DbType.Int32);
-                command.Parameters.Add("xpos", System.Data.DbType.Single);
-                command.Parameters.Add("ypos", System.Data.DbType.Single);
-                command.Parameters.Add("zpos", System.Data.DbType.Single);
-                command.Parameters.Add("yrot", System.Data.DbType.Single);
-                command.Parameters.Add("animestate", System.Data.DbType.Int32);
-
-                command.Parameters["userid"].Value = sync.userid;
-                command.Parameters["xpos"].Value = sync.xpos;
-                command.Parameters["ypos"].Value = sync.ypos;
-                command.Parameters["zpos"].Value = sync.zpos;
-                command.Parameters["yrot"].Value = sync.yrot;
-                command.Parameters["animestate"].Value = sync.animestate;
-
-                command.ExecuteNonQuery();
-            }
         }*/
+
+        public static void SavePlayerSyncData(PlayerSyncData sync)
+        {
+            using (SQLiteCommand cmd = con.CreateCommand())
+            {
+                cmd.CommandText = @"UPDATE players SET xpos = @xpos, ypos = @ypos, zpos = @zpos, xrot = @xrot, yrot = @yrot, animestate = @animestate WHERE userid = @userid";
+
+                cmd.Parameters.Add("userid", System.Data.DbType.Int32);
+                cmd.Parameters.Add("xpos", System.Data.DbType.Single);
+                cmd.Parameters.Add("ypos", System.Data.DbType.Single);
+                cmd.Parameters.Add("zpos", System.Data.DbType.Single);
+                cmd.Parameters.Add("xrot", System.Data.DbType.Single);
+                cmd.Parameters.Add("yrot", System.Data.DbType.Single);
+                cmd.Parameters.Add("animestate", System.Data.DbType.Int32);
+
+                cmd.Parameters["userid"].Value = sync.userid;
+                cmd.Parameters["xpos"].Value = sync.xpos;
+                cmd.Parameters["ypos"].Value = sync.ypos;
+                cmd.Parameters["zpos"].Value = sync.zpos;
+                cmd.Parameters["xrot"].Value = sync.xrot;
+                cmd.Parameters["yrot"].Value = sync.yrot;
+                cmd.Parameters["animestate"].Value = sync.animestate;
+
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

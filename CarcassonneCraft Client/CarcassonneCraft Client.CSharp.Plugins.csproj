@@ -122,6 +122,7 @@
     <None Include="Assets\Assemblies\LibNoise.Unity-master\COPYING.txt" />
     <None Include="Assets\Assemblies\Lidgren\Lidgren.Network.XML" />
     <None Include="Assets\Assemblies\protobuf-net\protobuf-net.xml" />
+    <None Include="Assets\Fonts\LuckiestGuy\LICENSE.txt" />
     <None Include="Assets\README_SD_UnityChan.txt" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />

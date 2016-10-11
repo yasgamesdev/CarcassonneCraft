@@ -59,10 +59,9 @@ namespace CarcassonneCraft
             GSrv.SetConnectPacketHandler(ConnectHandler);
             GSrv.SetDisconnectPacketHandler(DisconnectHandler);
             GSrv.SetDebugPacketHandler(DebugHandler);
-            /*GSrv.SetPacketHandler(MessageType.Login, DataType.Bytes, LoginHandler);
+            GSrv.SetPacketHandler(MessageType.Login, DataType.Bytes, LoginHandler);
             GSrv.SetPacketHandler(MessageType.Register, DataType.Bytes, RegisterHandler);
-            GSrv.SetPacketHandler(MessageType.Push, DataType.Bytes, PushHandler);
-            GSrv.SetPacketHandler(MessageType.SendMessage, DataType.String, SendMessageHandler);*/
+            //GSrv.SetPacketHandler(MessageType.SendMessage, DataType.String, SendMessageHandler);
             GSrv.SetPacketHandler(MessageType.RequestAreaInfo, DataType.Int32, RequestAreaInfoHandler);
             GSrv.SetPacketHandler(MessageType.RequestChunkDiffs, DataType.Bytes, RequestChunkDiffsHandler);
             GSrv.SetPacketHandler(MessageType.RequestAllAreaInfo, DataType.Bytes, RequestAllAreaInfoHandler);
@@ -101,7 +100,7 @@ namespace CarcassonneCraft
             }
 
             GSrv.Shutdown();
-            GSQLite.SaveAll();
+            Players.SaveAllPlayer();
             GSQLite.Close();
         }
 
@@ -200,7 +199,7 @@ namespace CarcassonneCraft
 
         static public void ConnectHandler(NetConnection connection, object data)
         {
-            if (Players.GetPlayerCount() == 0)
+            /*if (Players.GetPlayerCount() == 0)
             {
                 PlayerInitData player = GSQLite.LoginUser("hiro", new byte[32]);
                 Players.AddPlayer(connection, player);
@@ -213,12 +212,16 @@ namespace CarcassonneCraft
                 Players.AddPlayer(connection, player);
                 GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<PlayerInitData>(player), connection, NetDeliveryMethod.ReliableOrdered);
                 return;
-            }
+            }*/
         }
 
         static public void DisconnectHandler(NetConnection connection, object data)
         {
-            Players.DeletePlayer(connection);
+            if (Players.IsAuthDone(connection))
+            {
+                Players.SaveData(connection);
+                Players.DeletePlayer(connection);
+            }            
         }
 
         static public void DebugHandler(NetConnection connection, object data)
@@ -423,20 +426,16 @@ namespace CarcassonneCraft
             }
         }
 
-        /*static public void LoginHandler(NetConnection connection, object data)
+        static public void LoginHandler(NetConnection connection, object data)
         {
-            UserNameAndPassword info = GSrv.Deserialize<UserNameAndPassword>((byte[])data);
+            LoginInfo info = GSrv.Deserialize<LoginInfo>((byte[])data);
 
-            PlayerInitData init = GSQLite.LoginUser(info.name, info.passwd);
+            PlayerInitData init = GSQLite.LoginUser(info.username, info.passwd);
             if (init != null)
             {
-                Player player = new Player(connection, init);
-                ObjectManager.AddObject(player, ObjectType.Player);
+                Players.AddPlayer(connection, init);
 
-                GSrv.SendToAll(MessageType.Join, GSrv.Serialize<PlayerInitData>(init), NetDeliveryMethod.ReliableOrdered);
-
-                InitDatas inits = ObjectManager.GetInitDatas();
-                GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<InitDatas>(inits), connection, NetDeliveryMethod.ReliableOrdered);
+                GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<PlayerInitData>(init), connection, NetDeliveryMethod.ReliableOrdered);
             }
             else
             {
@@ -446,33 +445,28 @@ namespace CarcassonneCraft
 
         static public void RegisterHandler(NetConnection connection, object data)
         {
-            UserNameAndPassword info = GSrv.Deserialize<UserNameAndPassword>((byte[])data);
+            LoginInfo info = GSrv.Deserialize<LoginInfo>((byte[])data);
 
-            if (info.name.Length >= 1)
+            if (info.username.Length >= 1)
             {
-                if (GSQLite.IsAlreadyExistUser(info.name))
+                if (GSQLite.IsAlreadyExistUser(info.username))
                 {
                     GSrv.Send(MessageType.RegisterFailed, "Name Already Used", connection, NetDeliveryMethod.ReliableOrdered);
                 }
                 else
                 {
-                    int userid = GSQLite.CreateUser(info.name, info.passwd);
+                    GSQLite.CreateAccount(info.username, info.passwd);
 
-                    PlayerInitData init = GSQLite.GetPlayer(info.name);
-                    Player player = new Player(connection, init);
-                    ObjectManager.AddObject(player, ObjectType.Player);
-
-                    GSrv.SendToAll(MessageType.Join, GSrv.Serialize<PlayerInitData>(init), NetDeliveryMethod.ReliableOrdered);
-
-                    InitDatas inits = ObjectManager.GetInitDatas();
-                    GSrv.Send(MessageType.LoginSuccess, GSrv.Serialize<InitDatas>(inits), connection, NetDeliveryMethod.ReliableOrdered);
+                    PlayerInitData init = GSQLite.LoginUser(info.username, info.passwd);
+                    Players.AddPlayer(connection, init);
+                    GSrv.Send(MessageType.RegisterSuccess, GSrv.Serialize<PlayerInitData>(init), connection, NetDeliveryMethod.ReliableOrdered);
                 }
             }
             else
             {
                 GSrv.Send(MessageType.RegisterFailed, "Register Failed", connection, NetDeliveryMethod.ReliableOrdered);
             }
-        }*/
+        }
 
         static public void PushHandler(NetConnection connection, object data)
         {

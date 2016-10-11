@@ -13,8 +13,7 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.4.0f3</UnityVersion>
@@ -126,6 +125,7 @@
     <Compile Include="Assets\Scripts\Env.cs" />
     <Compile Include="Assets\Scripts\Follow.cs" />
     <Compile Include="Assets\Scripts\GCli.cs" />
+    <Compile Include="Assets\Scripts\LoginInfo.pb.cs" />
     <Compile Include="Assets\Scripts\MessageType.cs" />
     <Compile Include="Assets\Scripts\NetworkScript.cs" />
     <Compile Include="Assets\Scripts\NodeScript.cs" />
@@ -167,6 +167,7 @@
     <None Include="Assets\Assemblies\LibNoise.Unity-master\COPYING.txt" />
     <None Include="Assets\Assemblies\Lidgren\Lidgren.Network.XML" />
     <None Include="Assets\Assemblies\protobuf-net\protobuf-net.xml" />
+    <None Include="Assets\Fonts\LuckiestGuy\LICENSE.txt" />
     <None Include="Assets\README_SD_UnityChan.txt" />
     <None Include="Assets\Standard Assets\Characters\FirstPersonCharacter\FirstPersonCharacterGuidelines.txt" />
     <None Include="Assets\Standard Assets\Characters\RollerBall\RollerBallGuidelines.txt" />

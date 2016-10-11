@@ -27,5 +27,10 @@ namespace CarcassonneCraft
             init.sync.yrot = data.yrot;
             init.sync.animestate = data.animestate;
         }
+
+        public void SaveData()
+        {
+            GSQLite.SavePlayerSyncData(init.sync);
+        }
     }
 }
